@@ -1,0 +1,9 @@
+[
+  {
+    "name" : "com.example.fn.UploadDiscountCampaigns",
+    "methods" : [
+      { "name" : "handleRequest" },
+      { "name" : "<init>" }
+    ]
+  }
+]
