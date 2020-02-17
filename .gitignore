@@ -9,4 +9,5 @@ target/classes/com/example/fn/UploadDiscountCampaigns$Campaign.class
 target/classes/com/example/fn/UploadDiscountCampaigns.class
 target/classes/com/example/fn/UploadDiscountCampaigns.class
 .vscode/settings.json
+.project
 togithub*
