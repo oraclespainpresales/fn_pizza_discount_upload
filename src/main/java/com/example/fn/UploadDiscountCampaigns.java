@@ -148,8 +148,8 @@ public class UploadDiscountCampaigns {
                     .POST(BodyPublishers.ofString(input))
                     .build();
 
-        HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        System.err.println("Response HTTP:::" +response.statusCode() );//+ " " + response.body());
+        HttpResponse<Void> response = this.httpClient.send(request, HttpResponse.BodyHandlers.discarding());
+        System.err.println("Response HTTP:::" +response.statusCode());//+ " " + response.body());
         if( response.statusCode() == HttpURLConnection.HTTP_CREATED) {
             responseMess = new StringBuilder ("[")
                             .append(input)
@@ -157,11 +157,21 @@ public class UploadDiscountCampaigns {
                             .toString();
         }
         else {
-            responseMess = new StringBuilder ("[")
+            if (response.statusCode() == HttpURLConnection.HTTP_UNAVAILABLE) {
+                responseMess = new StringBuilder ("[")
+                            .append(input)
+                            .append("] - ERROR insertion!! - ")
+                            .append(response.statusCode())
+                            .append(" Check ATP, it must be started!!!")
+                            .toString();
+            }
+            else{
+                responseMess = new StringBuilder ("[")
                             .append(input)
                             .append("] - ERROR insertion!! - ")
                             .append(response.statusCode())
                             .toString();
+            }
         }
         return responseMess;
     }
