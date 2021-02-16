@@ -149,7 +149,7 @@ public class UploadDiscountCampaigns {
                     .build();
 
         HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        System.err.println("Response HTTP:::" +response.statusCode() + " " + response.body());
+        System.err.println("Response HTTP:::" +response.statusCode() );//+ " " + response.body());
         if( response.statusCode() == HttpURLConnection.HTTP_CREATED) {
             responseMess = new StringBuilder ("[")
                             .append(input)
