@@ -72,11 +72,12 @@ public class UploadDiscountCampaigns {
      * this is an only 1h hour Token
      * use CLIENT_ID and CLIENT_SECRET to get the token
     */
-    private String getAuthToken() {
+    private String getAuthToken() throws URISyntaxException,IOException,InterruptedException {
         String authToken           = "";
         String clientId            = "";
         String clientSecret        = "";
         StringBuilder authTokenURL = new StringBuilder(ordsBaseUrl).append(ordsServiceOauth);
+        HttpResponse<String> response = null;
 
         try {
             clientId     = System.getenv().get("DB_ORDS_CLIENT_ID");
@@ -94,7 +95,7 @@ public class UploadDiscountCampaigns {
                     .POST(HttpRequest.BodyPublishers.ofString("grant_type=client_credentials"))
                     .build();
 
-            HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
             ObjectMapper mapper = new ObjectMapper();
             TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
@@ -102,7 +103,15 @@ public class UploadDiscountCampaigns {
             authToken = result.get("access_token");
         }
         catch (URISyntaxException | IOException | InterruptedException e) {
-            e.printStackTrace();
+            if (response.statusCode() == HttpURLConnection.HTTP_UNAVAILABLE) {
+                System.err.println(new StringBuilder ("[")                            
+                            .append("] - ERROR getting AuthToken!! - ")
+                            .append(response.statusCode())
+                            .append(" Check ATP, it must be started!!!")
+                            .toString());
+            }
+            throw new InterruptedException(e.getMessage());            
+            //e.printStackTrace();
         }
         return authToken;
     }
@@ -148,9 +157,8 @@ public class UploadDiscountCampaigns {
                     .POST(BodyPublishers.ofString(input))
                     .build();
 
-        System.err.println("HOLA CARA DE COLA");
         HttpResponse<Void> response = this.httpClient.send(request, HttpResponse.BodyHandlers.discarding());
-        System.err.println("Response HTTP:::" +response.statusCode());//+ " " + response.body());
+        //System.err.println("Response HTTP:::" +response.statusCode());//+ " " + response.body());
         if( response.statusCode() == HttpURLConnection.HTTP_CREATED) {
             responseMess = new StringBuilder ("[")
                             .append(input)
