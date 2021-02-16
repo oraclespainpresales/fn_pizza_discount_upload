@@ -148,6 +148,7 @@ public class UploadDiscountCampaigns {
                     .POST(BodyPublishers.ofString(input))
                     .build();
 
+        System.err.println("HOLA CARA DE COLA");
         HttpResponse<Void> response = this.httpClient.send(request, HttpResponse.BodyHandlers.discarding());
         System.err.println("Response HTTP:::" +response.statusCode());//+ " " + response.body());
         if( response.statusCode() == HttpURLConnection.HTTP_CREATED) {
