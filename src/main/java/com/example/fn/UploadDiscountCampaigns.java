@@ -62,7 +62,7 @@ public class UploadDiscountCampaigns {
             responseMess = setCampaignDiscount (ordsServiceUrl, input);
         }
         catch (URISyntaxException | IOException | InterruptedException e) {
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage().replaceAll("\\n\\r", ""));
             //e.printStackTrace();
         }
         return responseMess;
